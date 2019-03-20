@@ -52,6 +52,8 @@ void StripResolution()
   Double_t mc_mu = 0; //TODO: vary about one bin width
   mc_signal->SetParameters(4, mc_mu, 1);
   
+  TGraph *plot_graph = new TGraph(runs_n);
+  
   for (int n=0; n<runs_n; n++)
   {
     // number of strips
@@ -70,14 +72,28 @@ void StripResolution()
     if (hit_strips<2) reco_err = ((x_max-x_min)/granularity) / TMath::Sqrt(12); // case sqrt(12)
     else reco_err = plane->GetStdDev(11) / plane->GetNbinsX();                  // the "11" should be the x-axis
     
+    /*
     cout << "µ: " << cog 
          << "\tsigma: " << reco_err*granularity 
          << "\thits: " << hit_strips
          << "\tn:" << granularity 
          << endl;
+    */
+    
+    plot_graph->SetPoint(n, granularity, reco_err*granularity);
     
     delete plane;
   }
+  
+  TCanvas *c1 = new TCanvas("c1","strip resolution",200,10,700,500);
+  plot_graph->SetLineWidth(4);
+  plot_graph->SetMarkerStyle(21);
+  plot_graph->SetTitle("strip response resolution");
+  plot_graph->GetXaxis()->SetTitle("strip number");
+  plot_graph->GetYaxis()->SetTitle("sigma");
+  
+  plot_graph->Draw("AIC*");
+  c1->Update();
   
   delete mc_signal;
 }
