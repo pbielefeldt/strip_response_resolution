@@ -38,14 +38,14 @@ void StripResolution()
   // asked is "how does the resolution change with broadening avalanche width?",
   // what has to be counted here is sigma(avalanche)*granularity, where the 
   // former is set to one.
-  const Int_t granularity_start = 10;
-  const Int_t granularity_incre = 5;
+  const Int_t granularity_start = 2;
+  const Int_t granularity_incre = 4;
   
   // "integrated signal" – number in FillRandom
   const Int_t amp_n = 800;
   
   // how many individual simulations?
-  const int runs_n = 50;
+  const int runs_n = 250;
 
   // the impeding signal (don't change  it)
   TF1 *mc_signal = new TF1("MCSignal", "gaus(0)", x_min, x_max); 
@@ -92,6 +92,7 @@ void StripResolution()
   plot_graph->GetXaxis()->SetTitle("strip number");
   plot_graph->GetYaxis()->SetTitle("sigma");
   
+  c1->SetLogy();
   plot_graph->Draw("AIC*");
   c1->Update();
   
