@@ -28,8 +28,8 @@ Int_t num_strips(TH1I* h)
 
 void StripResolution()
 {
-  const Double_t x_min = -40;
-  const Double_t x_max = 40; 
+  const Double_t x_min = -400;
+  const Double_t x_max = 400; 
   
   // number of strips from x_min to x_max (start value, is incremented)
   //NOTE: The signal has to be the same in each case; Hence, without loss of
