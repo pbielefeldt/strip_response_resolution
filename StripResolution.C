@@ -78,24 +78,26 @@ void StripResolution()
         
         delete plane;
     }
-    
+
+    /*    
     // error assumption
     Double_t reco_err = 0;
     const Int_t hit_strips = num_strips(plane);
     if (hit_strips<2) reco_err = ((x_max-x_min)/granularity) / TMath::Sqrt(12); // case sqrt(12)
     else reco_err = plane->GetStdDev(11) / plane->GetNbinsX();                  // the "11" should be the x-axis
+    */
     
     const Double_t sigma = TMath::Sqrt(RMS2/(events_n-1));
     
     /*
     cout << "µ: " << cog 
-         << "\tsigma: " << reco_err*granularity 
+         << "\tsigma: " << sigma*granularity 
          << "\thits: " << hit_strips
          << "\tn:" << granularity 
          << endl;
     */
     
-    plot_graph->SetPoint(n, granularity, reco_err*granularity);
+    plot_graph->SetPoint(n, granularity, sigma*granularity);
   }
   
   TCanvas *c1 = new TCanvas("c1","strip resolution",200,10,700,500);
