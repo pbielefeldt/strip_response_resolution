@@ -46,11 +46,11 @@ void StripResolution()
   
   // how many individual simulations?
   const int runs_n = 250;
+  // how many events per run?
+  const int events_n = 8;
 
   // the impeding signal (don't change  it)
   TF1 *mc_signal = new TF1("MCSignal", "gaus(0)", x_min, x_max); 
-  Double_t mc_mu = 0; //TODO: vary about one bin width
-  mc_signal->SetParameters(4, mc_mu, 1);
   
   TGraph *plot_graph = new TGraph(runs_n);
   
@@ -59,18 +59,33 @@ void StripResolution()
     // number of strips
     const Int_t granularity = granularity_start + (n*granularity_incre);
     
-    // fill "strip plane"
-    TH1I *plane = new TH1I("p", "strip plane", granularity, x_min, x_max);
-    plane->FillRandom("MCSignal", amp_n);
+    Double_t RMS2 = 0.;
     
-    // reconstruction of the measusrement
-    const Double_t cog =  get_centre(plane);
+    for (int e=0; e<events_n; e++)
+    {
+        Double_t mc_mu = 0; //TODO: vary about one bin width
+        mc_signal->SetParameters(4, mc_mu, 1);
+        
+        // fill "strip plane"
+        TH1I *plane = new TH1I("p", "strip plane", granularity, x_min, x_max);
+        plane->FillRandom("MCSignal", amp_n);
+        
+        // reconstruction of the measusrement
+        const Double_t cog = get_centre(plane);
+        const Double_t residual = cog-mc_mu;
+        
+        RMS2 += residual*residual;
+        
+        delete plane;
+    }
     
     // error assumption
     Double_t reco_err = 0;
     const Int_t hit_strips = num_strips(plane);
     if (hit_strips<2) reco_err = ((x_max-x_min)/granularity) / TMath::Sqrt(12); // case sqrt(12)
     else reco_err = plane->GetStdDev(11) / plane->GetNbinsX();                  // the "11" should be the x-axis
+    
+    const Double_t sigma = TMath::Sqrt(RMS2/(events_n-1));
     
     /*
     cout << "µ: " << cog 
@@ -81,8 +96,6 @@ void StripResolution()
     */
     
     plot_graph->SetPoint(n, granularity, reco_err*granularity);
-    
-    delete plane;
   }
   
   TCanvas *c1 = new TCanvas("c1","strip resolution",200,10,700,500);
