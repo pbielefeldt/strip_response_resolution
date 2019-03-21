@@ -53,6 +53,7 @@ void StripResolution()
   TF1 *mc_signal = new TF1("MCSignal", "gaus(0)", x_min, x_max); 
   
   TGraph *plot_graph = new TGraph(runs_n);
+  TRandom *rng = new TRandom2();
   
   for (int n=0; n<runs_n; n++)
   {
@@ -63,7 +64,7 @@ void StripResolution()
     
     for (int e=0; e<events_n; e++)
     {
-        Double_t mc_mu = 0; //TODO: vary about one bin width
+        Double_t mc_mu = rng->Uniform(4)-2;                                     // random [-2,2]
         mc_signal->SetParameters(4, mc_mu, 1);
         
         // fill "strip plane"
