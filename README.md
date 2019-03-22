@@ -15,4 +15,4 @@ Hence, an __ideal__ avalanche width (i.e. a minimum in the avalanche-width vs. r
 This small simulation is intended to give a handle on this minimum.
 N.B.: It could equivalently be interpreted as a search for the ideal strip width in a 2D readout.
 
-[sqrtqw]: http://chart.apis.google.com/chart?cht=tx&chl=\frac{\mathrm{strip-width}}{\sqrt{12}}
+[sqrt12]: http://chart.apis.google.com/chart?cht=tx&chl=\frac{\mathrm{strip-width}}{\sqrt{12}}
